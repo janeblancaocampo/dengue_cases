@@ -11,12 +11,12 @@ model = load_model('lstm_model.h5')
 # Load the Dengue dataset
 data = pd.read_csv('Dengue_Data (2010-2020).csv', index_col='Date', parse_dates=True)
 
-data = data[data.City == 'Colombo']
-data.drop('City', axis = 1, inplace = True)
+new_data = data[data.City == 'Colombo']
+new_data.drop('City', axis = 1, inplace = True)
 
 # Preprocess the data
 scaler = MinMaxScaler(feature_range=(0, 1))
-scaled_data = scaler.fit_transform(data.values)
+scaled_data = scaler.fit_transform(new_data.values)
 
 
 # Split the data into input and output variables
@@ -38,13 +38,13 @@ st.title("Monthly Dengue Cases Prediction")
 st.write("This app predicts the next 12 months average dengue cases in Sri Lanka based on historical data.")
 
 # Getting the data with the highest cases 
-highest = data[data.Value == max(data.Value)]
+highest = new_data[new_data.Value == max(new_data.Value)]
 st.subheader("Highest Dengue Cases (2010 - 2020)")
 highest
 
 # Getting the data with the lowest cases 
 # Getting the data with the highest cases 
-lowest = data[data.Value == min(data.Value)]
+lowest = new_data[new_data.Value == min(new_data.Value)]
 st.subheader("Lowest Dengue Cases (2010 - 2020)")
 lowest
 
@@ -54,7 +54,7 @@ st.write(pred_df)
 
 # Plot the predicted Dengue cases for the next 12 months
 fig = go.Figure()
-fig.add_trace(go.Scatter(x=data.index, y=data['Value'], name='Actual'))
+fig.add_trace(go.Scatter(x=new_data.index, y=new_data['Value'], name='Actual'))
 fig.add_trace(go.Scatter(x=pred_df.index, y=pred_df['Predicted Dengue Cases'], name='Predicted'))
 fig.update_layout(title='Dengue Cases Prediction', xaxis_title='Date', yaxis_title='Dengue Cases')
 st.plotly_chart(fig)
