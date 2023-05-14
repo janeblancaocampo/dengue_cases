@@ -13,6 +13,7 @@ data = pd.read_csv('Dengue_Data (2010-2020).csv', index_col='Date', parse_dates=
 
 new_data = data[data.City == 'Colombo']
 new_data.drop('City', axis = 1, inplace = True)
+new_data.plot()
 
 # Preprocess the data
 scaler = MinMaxScaler(feature_range=(0, 1))
