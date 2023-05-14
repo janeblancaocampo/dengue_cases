@@ -13,7 +13,7 @@ def predict_case(data):
     # slice the data to only include the last 60 days
     data = data[-60:]
     # reshape the input data to match the expected input shape of the model
-    data = data.reshape((1, data.shape[2]))
+    data = np.reshape(data, (1, -1, data.shape[1]))
     prediction = model.predict(data)
     # return the predicted dengue case value
     return prediction[0][0]
