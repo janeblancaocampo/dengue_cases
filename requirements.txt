@@ -2,5 +2,4 @@ streamlit
 tensorflow
 plotly.express
 matplotlib
-sklearn
-sklearn.preprocessing
+scikit-learn
