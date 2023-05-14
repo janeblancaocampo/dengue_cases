@@ -13,9 +13,9 @@ def predicted_case(data):
     # slice the data to only include the last months
     data = data[-60:]
     # reshape the input data to match the expected input shape of the model
-    data = data.to_numpy().reshape((-1, 1))
+    data = np.reshape(data, (data.shape[0], 1, 0))
     # make the prediction
-    prediction = model.predict(np.array([data]))
+    prediction = model.predict(data)
     # return the predicted temperature value
     return prediction[0][0]
 
