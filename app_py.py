@@ -11,9 +11,14 @@ model = load_model('lstm_model.h5')
 def predicted_case(data):
     # slice the data to only include the last months
     data = data[-60:].values
-    data = data.reshape((1, 1, data.shape[0]))
+    # scale the data
+    scaled_data = scaler.transform(data.reshape(-1, 1))
+    # reshape the data into the required input shape of the model
+    scaled_data = scaled_data.reshape((1, 1, scaled_data.shape[0]))
     # make the prediction
-    prediction = model.predict(data)
+    prediction = model.predict(scaled_data)
+    # inverse transform the prediction to get the actual value
+    prediction = scaler.inverse_transform(prediction.reshape(-1, 1))
     # return the predicted dengue cases value
     return prediction[0][0]
 
