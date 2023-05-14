@@ -11,8 +11,7 @@ model = load_model('lstm_model.h5')
 # function to make predictions using the loaded model
 def predicted_case(data):
     # slice the data to only include the last months
-    data = data[-60:]
-    data = data.to_numpy()
+    data = data[-60:].values
     data = data.reshape((1, data.shape[0], 1))
     # make the prediction
     prediction = model.predict(data)
