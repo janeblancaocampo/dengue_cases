@@ -12,6 +12,7 @@ model = load_model('lstm_model.h5')
 def predicted_case(data):
     # slice the data to only include the last months
     data = data[-60:]
+    data = data.reshape((1, data.shape[0], 1))
     # make the prediction
     prediction = model.predict(data)
     # return the predicted temperature value
