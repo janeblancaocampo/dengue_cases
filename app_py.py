@@ -1,65 +1,46 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from tensorflow.keras.models import load_model
-import plotly.express as px
-import matplotlib.pyplot as plt
+from keras.models import load_model
 
-# load the saved LSTM model
+# Load the pre-trained LSTM model
 model = load_model('lstm_model.h5')
 
-# function to make predictions using the loaded model
-def predict_case(data):
-    # slice the data to only include the last 60 days
-    data = data[-60:]
-    # reshape the input data to match the expected input shape of the model
-    data = np.reshape(data, (1, -1, data.shape[1]))
-    prediction = model.predict(data)
-    # return the predicted dengue case value
-    return prediction[0][0]
+# Load the data
+data = pd.read_csv('Dengue_Data (2010-2020).csv', index_col='Date', parse_dates=True)
 
-# set up the Streamlit app
-st.set_page_config(page_title="Monthly Predicted Dengue Cases in Sri Lanka")
-st.title("Monthly Predicted Dengue Cases in Sri Lanka")
-st.write("This app predicts the nonthly dengue cases in Sri Lanka based on historical data.")
+# Preprocess the data
+scaler = MinMaxScaler(feature_range=(0, 1))
+scaled_data = scaler.fit_transform(data.values)
 
-# load the data
-data = pd.read_csv('Dengue_Data (2010-2020).csv', parse_dates=['Date'])
-data.set_index('Date', inplace=True)
+# Split the data into input and output variables
+X = scaled_data[:,1:]
+y = scaled_data[:,0]
 
-# display the current temperature data
-st.subheader("Current Dengue Cases")
-st.write(data.tail())
+# Reshape input data into (samples, time steps, features)
+X = X.reshape(X.shape[0], 1, X.shape[1])
 
-# get the latest dengue cases
-latest_case = data['Value'].iloc[-1]
+# Make predictions
+predictions = model.predict(X)
 
-# get the date of the latest temperature value
-latest_date = data.index[-1]
+# Inverse transform the predictions and actual values
+predictions = scaler.inverse_transform(predictions)
+y = scaler.inverse_transform(y.reshape(-1, 1))
 
-# make predictions for the next 12 months
-predicted_cases = []
-for i in range(30):
-    next_date = latest_date + pd.Timedelta(days=1)
-    pred_case = predict_case(np.array(data['Value']))
-    predicated_cases.append(pred_case)
-    latest_date = next_date
-    data.loc[next_date] = pred_case
+# Get the current dengue cases and predicted dengue cases for the next 12 months
+current_cases = int(y[-1][0])
+predicted_cases = int(predictions[-1][0])
+for i in range(1, 13):
+    predicted_cases = int(model.predict(predictions[-1].reshape(1, 1, 1))[0][0])
+    predictions = np.append(predictions, predicted_cases)
+predicted_cases = int(predictions[-1])
 
-# display the predicted dengue cases for the next 12 months
-st.subheader("Next 12 months of Dengue Cases in Sri Lanka")
-st.write(data.tail(12)['Value'])
+# Create a DataFrame for the current and predicted dengue cases
+dates = pd.date_range(start=data.index[-1], periods=13, freq='MS')[1:]
+predicted_cases_df = pd.DataFrame({'Date': dates, 'Dengue Cases': predictions[-12:]})
 
-# plot the predicted dengue cases using Plotly Express
-fig = px.line(data.tail(12), y='Value', title="Predict Dengue Cases for the next 12 months")
-st.plotly_chart(fig)
-
-# plot the predicted dengue values
-fig, ax = plt.subplots(figsize=(8, 4))
-ax.plot(data['Value'], label='Actual')
-ax.plot(data['Value'].tail(30), label='Predicted')
-ax.set_xlabel('Year')
-ax.set_ylabel('Value')
-ax.set_title('Actual vs Predicted Monthly Predicted Dengue Cases')
-ax.legend()
-st.pyplot(fig)
+# Create a line plot of the current and predicted dengue cases
+st.title('Dengue Cases Forecast')
+st.write('Current Dengue Cases:', current_cases)
+st.write('Predicted Dengue Cases (Next 12 Months):', predicted_cases)
+st.line_chart(predicted_cases_df.set_index('Date'))
