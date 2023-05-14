@@ -25,7 +25,6 @@ X_test = X_test.reshape(X_test.shape[0], 1, X_test.shape[1])
 
 # Make predictions for the next 12 months
 y_pred = model.predict(X_test)
-y_pred = scaler.inverse_transform(y_pred)
 
 # Create a DataFrame of the predicted values with the dates as the index
 dates = pd.date_range(start=data.index[-1], periods=12, freq='MS')
