@@ -57,11 +57,12 @@ import matplotlib.pyplot as plt
 
 # Plot actual and predicted values
 sns.set_style("darkgrid")
-plt.figure(figsize=(12, 6))
+fig = plt.figure(figsize=(12, 6))
 sns.lineplot(data=new_data, x=new_data.index, y='Value', label='Actual')
 sns.lineplot(data=pred_df, x=pred_df.index, y='Predicted Dengue Cases', label='Predicted')
 plt.title('Dengue Cases Prediction')
 plt.xlabel('Date')
 plt.ylabel('Dengue Cases')
 plt.show()
+st.pyplot(fig)
 
