@@ -2,4 +2,3 @@ streamlit
 tensorflow
 plotly.express
 matplotlib
-scikit-learn
