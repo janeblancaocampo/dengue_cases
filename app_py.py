@@ -52,17 +52,11 @@ lowest
 st.write('The predicted number of Dengue cases for the next 12 months are:')
 st.write(pred_df)
 
-import seaborn as sns
-import matplotlib.pyplot as plt
-
-# Plot actual and predicted values
-sns.set_style("darkgrid")
-st.pyplot(plt.figure(figsize=(12, 6)))
-sns.lineplot(data=new_data, x=new_data.index, y='Value', label='Actual')
-sns.lineplot(data=pred_df, x=pred_df.index, y='Predicted Dengue Cases', label='Predicted')
-plt.title('Dengue Cases Prediction')
-plt.xlabel('Date')
-plt.ylabel('Dengue Cases')
-plt.show()
+# Plot the predicted Dengue cases for the next 12 months
+fig = go.Figure()
+fig.add_trace(go.Scatter(x=data.index, y=data['Value'], name='Actual'))
+fig.add_trace(go.Scatter(x=pred_df.index, y=pred_df['Predicted Dengue Cases'], name='Predicted'))
+fig.update_layout(title='Dengue Cases Prediction', xaxis_title='Date', yaxis_title='Dengue Cases')
+st.plotly_chart(fig)
 
 
