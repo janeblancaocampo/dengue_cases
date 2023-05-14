@@ -30,11 +30,11 @@ pred_df = pd.DataFrame(y_pred, index=dates, columns=['Predicted Dengue Cases'])
 # Get the last known value of the Dengue cases
 last_known_value = data['Value'][-1]
 
-# Create a Streamlit app
-st.title('Dengue Cases Prediction')
+# set up the Streamlit app
+st.set_page_config(page_title="Monthly Dengue Cases Prediction", page_icon="🦟")
+st.title("Monthly Dengue Cases Prediction")
+st.write("This app predicts the next 12 months average dengue cases in Szeged, Hungary based on historical data.")
 
-# Show the last known value of the Dengue cases
-st.write('The current number of Dengue cases is:', last_known_value)
 
 # Show the predicted Dengue cases for the next 12 months
 st.write('The predicted number of Dengue cases for the next 12 months are:')
