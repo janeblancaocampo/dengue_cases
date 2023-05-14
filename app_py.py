@@ -1,47 +1,48 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
-import tensorflow as tf
+from tensorflow.keras.models import load_model
 from sklearn.preprocessing import MinMaxScaler
+import numpy as np
+import plotly.graph_objs as go
 
-# Load the data
-data = pd.read_csv('Dengue_Data (2010-2020).csv', index_col = 'Date', parse_dates = True)
+# Load the LSTM model
+model = load_model('lstm_model.h5')
+
+# Load the Dengue dataset
+data = pd.read_csv('Dengue_Data (2010-2020).csv', index_col='Date', parse_dates=True)
+
+# Preprocess the data
 scaler = MinMaxScaler(feature_range=(0, 1))
 scaled_data = scaler.fit_transform(data.values)
 
-# Load the model
-model = tf.keras.models.load_model('lstm_model.h5')
+# Split the data into input and output variables
+X_test = scaled_data[-12:, 1:]
+X_test = X_test.reshape(X_test.shape[0], 1, X_test.shape[1])
 
-# Create a function to make predictions
-def make_predictions(data, model, n_predictions):
-    # Reshape the input data
-    X = data[-1:,1:]
-    X = X.reshape(X.shape[0], 1, X.shape[1])
-    # Make predictions for the next n predictions
-    predictions = []
-    for i in range(n_predictions):
-        y_hat = model.predict(X)
-        predictions.append(y_hat[0][0])
-        X = np.append(X[:,:,1:], [[y_hat[0]]], axis=2)
-    return predictions
+# Make predictions for the next 12 months
+y_pred = model.predict(X_test)
+y_pred = scaler.inverse_transform(y_pred)
 
-# Set the number of predictions to make
-n_predictions = 12
+# Create a DataFrame of the predicted values with the dates as the index
+dates = pd.date_range(start=data.index[-1], periods=12, freq='MS')
+pred_df = pd.DataFrame(y_pred, index=dates, columns=['Predicted Dengue Cases'])
 
-# Make predictions
-predictions = make_predictions(scaled_data, model, n_predictions)
-predictions = scaler.inverse_transform(np.array(predictions).reshape(-1,1)).flatten()
+# Get the last known value of the Dengue cases
+last_known_value = data['Value'][-1]
 
-# Show the current dengue cases and predicted dengue cases for the next 12 months
-st.write("## Dengue Cases")
-st.write("Current Cases: ", int(data['Value'].iloc[-1]))
-st.write("Predicted Cases for the Next 12 Months: ", [int(p) for p in predictions])
+# Create a Streamlit app
+st.title('Dengue Cases Prediction')
 
-# Show a graph of the current and predicted dengue cases
-st.write("## Dengue Cases Graph")
-df = pd.DataFrame({'Date': data.index, 'Cases': data['Value']})
-df = df.append({'Date': pd.date_range(start=data.index[-1], periods=2, freq='MS')[1], 'Cases': predictions[0]}, ignore_index=True)
-for i in range(1, len(predictions)):
-    df = df.append({'Date': pd.date_range(start=df['Date'].iloc[-1], periods=2, freq='MS')[1], 'Cases': predictions[i]}, ignore_index=True)
-df.set_index('Date', inplace=True)
-st.line_chart(df)
+# Show the last known value of the Dengue cases
+st.write('The current number of Dengue cases is:', last_known_value)
+
+# Show the predicted Dengue cases for the next 12 months
+st.write('The predicted number of Dengue cases for the next 12 months are:')
+st.write(pred_df)
+
+# Plot the predicted Dengue cases for the next 12 months
+fig = go.Figure()
+fig.add_trace(go.Scatter(x=data.index, y=data['Value'], name='Actual'))
+fig.add_trace(go.Scatter(x=pred_df.index, y=pred_df['Predicted Dengue Cases'], name='Predicted'))
+fig.update_layout(title='Dengue Cases Prediction', xaxis_title='Date', yaxis_title='Dengue Cases')
+st.plotly_chart(fig)
