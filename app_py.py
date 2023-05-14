@@ -10,7 +10,10 @@ model = load_model('lstm_model.h5')
 
 # function to make predictions using the loaded model
 def predict_case(data):
-    # make the prediction
+    # slice the data to only include the last 60 days
+    data = data[-60:]
+    # reshape the input data to match the expected input shape of the model
+    data = data.reshape((1, data.shape[2]))
     prediction = model.predict(data)
     # return the predicted dengue case value
     return prediction[0][0]
