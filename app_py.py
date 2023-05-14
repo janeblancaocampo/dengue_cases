@@ -11,6 +11,10 @@ model = load_model('lstm_model.h5')
 # Load the Dengue dataset
 data = pd.read_csv('Dengue_Data (2010-2020).csv', index_col='Date', parse_dates=True)
 
+data = data[data.City == 'Colombo']
+cols = ['City', 'Unnamed: 3', 'Unnamed: 4']
+data.drop(cols, axis = 1, inplace = True)
+
 # Preprocess the data
 scaler = MinMaxScaler(feature_range=(0, 1))
 scaled_data = scaler.fit_transform(data.values)
