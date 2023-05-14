@@ -42,7 +42,7 @@ latest_date = data.index[-1]
 predicted_cases = []
 for i in range(30):
     next_date = latest_date + pd.Timedelta(days=1)
-    pred_case = predict_case(np.array(data['Value']))
+    pred_case = predict_case(data['Value'])
     pred_cases.append(pred_case)
     latest_date = next_date
     data.loc[next_date] = pred_case
