@@ -13,7 +13,6 @@ data = pd.read_csv('Dengue_Data (2010-2020).csv', index_col='Date', parse_dates=
 
 new_data = data[data.City == 'Colombo']
 new_data.drop('City', axis = 1, inplace = True)
-new_data.plot()
 
 # Preprocess the data
 scaler = MinMaxScaler(feature_range=(0, 1))
@@ -57,7 +56,7 @@ st.write(pred_df)
 fig = go.Figure()
 fig.add_trace(go.Scatter(x=new_data.index, y=new_data['Value'], name='Actual'))
 fig.add_trace(go.Scatter(x=pred_df.index, y=pred_df['Predicted Dengue Cases'], name='Predicted'))
-fig.update_layout(title='Dengue Cases Prediction', xaxis_title='Date', yaxis_title='Dengue Cases')
+fig.update_layout(title='Dengue Cases Prediction', xaxis_title='Date', yaxis_title='Dengue Cases', width=800, height=500)
 st.plotly_chart(fig)
 
 
