@@ -15,6 +15,7 @@ data = pd.read_csv('Dengue_Data (2010-2020).csv', index_col='Date', parse_dates=
 scaler = MinMaxScaler(feature_range=(0, 1))
 scaled_data = scaler.fit_transform(data.values)
 
+
 # Split the data into input and output variables
 X_test = scaled_data[-12:, 1:]
 X_test = X_test.reshape(X_test.shape[0], 1, X_test.shape[1])
@@ -26,9 +27,6 @@ y_pred = scaler.inverse_transform(y_pred)
 # Create a DataFrame of the predicted values with the dates as the index
 dates = pd.date_range(start=data.index[-1], periods=12, freq='MS')
 pred_df = pd.DataFrame(y_pred, index=dates, columns=['Predicted Dengue Cases'])
-
-# Get the last known value of the Dengue cases
-last_known_value = data['Value'][-1]
 
 # set up the Streamlit app
 st.set_page_config(page_title="Monthly Dengue Cases Prediction", page_icon="🦟")
@@ -46,3 +44,8 @@ fig.add_trace(go.Scatter(x=data.index, y=data['Value'], name='Actual'))
 fig.add_trace(go.Scatter(x=pred_df.index, y=pred_df['Predicted Dengue Cases'], name='Predicted'))
 fig.update_layout(title='Dengue Cases Prediction', xaxis_title='Date', yaxis_title='Dengue Cases')
 st.plotly_chart(fig)
+
+# Getting the date with the highest cases 
+highest = data[data.Value == max(data.Value)]
+st.write('Highest Dengue Cases: ')
+highest
