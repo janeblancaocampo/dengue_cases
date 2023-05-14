@@ -41,7 +41,7 @@ latest_date = data.index[-1]
 # make predictions for the next 12 months
 predicted_cases = []
 for i in range(12):
-    next_date = latest_date + pd.Timedelta(months=12)
+    next_date = latest_date + pd.DateOffset(months=1)
     pred_case = predicted_case(data['Value'])
     predicted_cases.append(pred_case)
     latest_date = next_date
