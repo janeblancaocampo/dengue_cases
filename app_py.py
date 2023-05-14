@@ -33,7 +33,7 @@ last_known_value = data['Value'][-1]
 # set up the Streamlit app
 st.set_page_config(page_title="Monthly Dengue Cases Prediction", page_icon="🦟")
 st.title("Monthly Dengue Cases Prediction")
-st.write("This app predicts the next 12 months average dengue cases in Szeged, Hungary based on historical data.")
+st.write("This app predicts the next 12 months average dengue cases in Sri Lanka based on historical data.")
 
 
 # Show the predicted Dengue cases for the next 12 months
