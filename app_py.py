@@ -35,7 +35,7 @@ pred_df = pd.DataFrame(y_pred, index=dates, columns=['Predicted Dengue Cases'])
 # set up the Streamlit app
 st.set_page_config(page_title="Monthly Dengue Cases Prediction", page_icon="🦟")
 st.title("Monthly Dengue Cases Prediction")
-st.write("This app predicts the next 12 months average dengue cases in Sri Lanka based on historical data.")
+st.write("This app predicts the next 12 months average dengue cases in Colomba, Sri Lanka based on historical data.")
 
 # Getting the data with the highest cases 
 highest = new_data[new_data.Value == max(new_data.Value)]
