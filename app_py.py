@@ -5,6 +5,7 @@ from sklearn.preprocessing import MinMaxScaler
 import numpy as np
 import plotly.graph_objs as go
 
+
 # Load the LSTM model
 model = load_model('lstm_model.h5')
 
@@ -53,10 +54,15 @@ st.write('The predicted number of Dengue cases for the next 12 months are:')
 st.write(pred_df)
 
 # Plot the predicted Dengue cases for the next 12 months
+# generate a list of y-axis tick values
+y_ticks = list(range(1000, 9000, 1000))
+
+# create the plot
 fig = go.Figure()
 fig.add_trace(go.Scatter(x=data.index, y=data['Value'], name='Actual'))
 fig.add_trace(go.Scatter(x=pred_df.index, y=pred_df['Predicted Dengue Cases'], name='Predicted'))
-fig.update_layout(title='Dengue Cases Prediction', xaxis_title='Date', yaxis_title='Dengue Cases')
+fig.update_layout(title='Dengue Cases Prediction', xaxis_title='Date', yaxis_title='Dengue Cases', 
+                  yaxis=dict(tickvals=y_ticks))
 st.plotly_chart(fig)
 
 
