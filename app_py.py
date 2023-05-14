@@ -10,10 +10,6 @@ model = load_model('lstm_model.h5')
 
 # function to make predictions using the loaded model
 def predict_case(data):
-    # slice the data to only include the last 60 days
-    data = data[-60:]
-    # reshape the input data to match the expected input shape of the model
-    data = data.reshape(1, data.shape[0], data.shape[1])
     # make the prediction
     prediction = model.predict(data)
     # return the predicted dengue case value
@@ -33,7 +29,7 @@ st.subheader("Current Dengue Cases")
 st.write(data.tail())
 
 # get the latest dengue cases
-latest_temp = data['Value'].iloc[-1]
+latest_case = data['Value'].iloc[-1]
 
 # get the date of the latest temperature value
 latest_date = data.index[-1]
