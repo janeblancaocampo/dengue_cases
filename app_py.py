@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 model = load_model('lstm_model.h5')
 
 # function to make predictions using the loaded model
-def pred_case(data):
+def predicted_case(data):
     # slice the data to only include the last months
     data = data[-60:]
     # reshape the input data to match the expected input shape of the model
@@ -51,7 +51,7 @@ latest_date = data.index[-1]
 predicted_temps = []
 for i in range(5):
     next_date = latest_date + pd.Timedelta(days=1)
-    pred_case = pred_case(np.array(data['Value']))
+    pred_case = predicted_case(np.array(data['Value']))
     pred_case.append(pred_case)
     latest_date = next_date
     data.loc[next_date] = pred_case
