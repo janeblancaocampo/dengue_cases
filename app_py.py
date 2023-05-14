@@ -14,8 +14,6 @@ data = pd.read_csv('Dengue_Data (2010-2020).csv', index_col='Date', parse_dates=
 new_data = data[data.City == 'Colombo']
 new_data.drop('City', axis = 1, inplace = True)
 
-st.plot(new_data)
-
 # Preprocess the data
 scaler = MinMaxScaler(feature_range=(0, 1))
 scaled_data = scaler.fit_transform(new_data.values)
