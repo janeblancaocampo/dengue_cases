@@ -56,7 +56,7 @@ st.write(pred_df)
 fig = go.Figure()
 fig.add_trace(go.Scatter(x=new_data.index, y=new_data['Value'], name='Actual'))
 fig.add_trace(go.Scatter(x=pred_df.index, y=pred_df['Predicted Dengue Cases'], name='Predicted'))
-fig.update_layout(title='Dengue Cases Prediction', xaxis_title='Date', yaxis_title='Dengue Cases', width=800, height=500)
+fig.update_layout(title='Dengue Cases Prediction', xaxis_title='Date', yaxis_title='Dengue Cases', width=1000, height=1000)
 st.plotly_chart(fig)
 
 
