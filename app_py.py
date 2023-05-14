@@ -13,7 +13,7 @@ def predict_case(data):
     # slice the data to only include the last 60 days
     data = data[-60:]
     # reshape the input data to match the expected input shape of the model
-    data = data.reshape((1, 0))
+    data = data.reshape((1, 0, 1))
     # make the prediction
     prediction = model.predict(data)
     # return the predicted dengue case value
@@ -42,7 +42,7 @@ latest_date = data.index[-1]
 predicted_cases = []
 for i in range(30):
     next_date = latest_date + pd.Timedelta(days=1)
-    pred_case = predict_case(data['Value'])
+    pred_case = predict_case(np.array(data['Value']))
     pred_cases.append(pred_case)
     latest_date = next_date
     data.loc[next_date] = pred_case
