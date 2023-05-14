@@ -1,6 +1,8 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+from sklearn.preprocessing import MinMaxScaler
+
 from keras.models import load_model
 
 # Load the pre-trained LSTM model
@@ -40,7 +42,7 @@ dates = pd.date_range(start=data.index[-1], periods=13, freq='MS')[1:]
 predicted_cases_df = pd.DataFrame({'Date': dates, 'Dengue Cases': predictions[-12:]})
 
 # Create a line plot of the current and predicted dengue cases
-st.title('Dengue Cases Forecast')
+st.title('🦟Dengue Cases Forecast🦟')
 st.write('Current Dengue Cases:', current_cases)
 st.write('Predicted Dengue Cases (Next 12 Months):', predicted_cases)
 st.line_chart(predicted_cases_df.set_index('Date'))
